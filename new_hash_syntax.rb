@@ -7,28 +7,32 @@ if file_name.nil?
 	exit 1
 end
 
-full_mode = (ARGV[1].upcase === "FULL")
-
-new_file = ""
-file = File.new(file_name, "r")
-
-while (line = file.gets)
-	if line.lstrip.start_with?("#") or full_mode
-		new_file+= to_new_syntax(line)
-	else
-		new_file+= line
-	end
-
-end
-file.close
-
-file = File.new(file_name + "_updated", "w")
-file.write(new_file)
-file.close
-
-puts "Done. Created " + file_name + "_updated"
+full_mode = (ARGV[1] and ARGV[1].upcase === "FULL")
 
 
 def to_new_syntax(line)
 	line.gsub(/:(\w+) =>/, '\1:')
 end
+
+def convert_file(file_name, full_mode)
+	new_file = ""
+	file = File.new(file_name, "r")
+
+	while (line = file.gets)
+		if line.lstrip.start_with?("#") or full_mode
+			new_file+= to_new_syntax(line)
+		else
+			new_file+= line
+		end
+
+	end
+	file.close
+
+	file = File.new(file_name + "_updated", "w")
+	file.write(new_file)
+	file.close
+end
+
+convert_file(file_name, full_mode)
+
+puts "Done. Created " + file_name + "_updated"
