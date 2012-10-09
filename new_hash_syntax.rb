@@ -35,4 +35,6 @@ end
 
 convert_file(file_name, full_mode)
 
-puts "Done. Created " + file_name + "_updated"
+puts "* Done. Created " + file_name + "_updated"
+puts "Compare using:\ndiff #{file_name}_updated #{file_name}"
+puts "Once happy:\nmv #{file_name}_updated #{file_name}"
