@@ -69,7 +69,7 @@ end
 def process(is_dir, target, full_mode)
 
 	if is_dir
-		Dir.glob(target+"/**/**[*.rb|*.|*.md]") {|f|
+		Dir.glob(target+"/**/**[*.rb|*.|*.md|*.rdoc]") {|f|
 			if File.file?(f) and f.match(/#{@postfix}$/).nil?
 				convert_file(f, full_mode)
 			end
