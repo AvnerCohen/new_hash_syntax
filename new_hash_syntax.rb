@@ -25,40 +25,57 @@ def convert_file(file_name, full_mode)
 	new_file = ""
 	file = File.new(file_name, "r")
 
-	while (line = file.gets)
-		if line.lstrip.start_with?("#") or full_mode
-			new_file+= to_new_syntax(line)
-		else
-			new_file+= line
-		end
+	changes_made=false #keep track if this files even needs saving or not
 
+	while (line = file.gets)
+		updated_line=to_new_syntax(line)
+
+		if line.lstrip.start_with?("#") or full_mode
+			new_file+=updated_line
+			changes_made = changes_made || (updated_line != line)
+		else
+			new_file+=line
+		end
 	end
 	file.close
 
-	file = File.new(file_name + @postfix, "w")
-	file.write(new_file)
-	file.close
+
+	save_file(file_name, new_file) if changes_made # execute new save only if changes made to original
+
 end
 
+def save_file(orig_file_name, content)
+
+	new_file_name = orig_file_name + @postfix
+
+	file = File.new(new_file_name, "w")
+	file.write(content)
+	file.close
+
+	log_changes(orig_file_name)
+end
+
+
+
 def log_changes(file_name)
-	puts "Compare using:\n\t\t"+ green("diff #{file_name}#{@postfix} #{file_name}")
-	puts "To Overwrite:\n\t\t"+ green("mv #{file_name}#{@postfix} #{file_name}\n")
+
+	new_file_name = file_name + @postfix
+
+	puts "Compare using:\n\t\t"+ green("diff #{new_file_name} #{file_name}")
+	puts "To Overwrite:\n\t\t"+ green("mv #{new_file_name} #{file_name}\n")
 end
 
 
 def process(is_dir, target, full_mode)
 
-	puts target
 	if is_dir
 		Dir.glob(target+"/**/**") {|f|
 			if File.file?(f) and f.match(/#{@postfix}$/).nil?
 				convert_file(f, full_mode)
-				log_changes(f)
 			end
 		}
 	else
 		convert_file(target, full_mode)
-		log_changes(file_name)
 	end
 end
 
