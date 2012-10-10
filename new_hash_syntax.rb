@@ -48,7 +48,7 @@ end
 
 def process(is_dir, target, full_mode)
 
-puts target
+	puts target
 	if is_dir
 		Dir.glob(target+"/**/**") {|f|
 			if File.file?(f) and f.match(/#{@postfix}$/).nil?
