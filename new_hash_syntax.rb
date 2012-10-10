@@ -36,19 +36,21 @@ def convert_file(file_name, full_mode)
 end
 
 def log_changes(file_name)
-		puts "================="
-		puts "Created " + file_name + "_updated"
-		puts "Compare using:\ndiff #{file_name}_updated #{file_name}"
-		puts "Once happy:\nmv #{file_name}_updated #{file_name}"
-		puts "================="
+	puts "================="
+	puts "Created " + file_name + "_updated"
+	puts "Compare using:\ndiff #{file_name}_updated #{file_name}"
+	puts "Once happy:\nmv #{file_name}_updated #{file_name}"
+	puts "================="
 end
 
 
 def process
 
 	if is_dir
-		Dir.glob(file_name+"/*") {|f|
-			convert_file(file_name, full_mode)
+		Dir.glob(file_name+"/*/**") {|f|
+			unless File.directory?(f)
+				convert_file(f, full_mode)
+			end
 		}
 	else
 
