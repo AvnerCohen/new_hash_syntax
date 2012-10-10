@@ -18,7 +18,7 @@ is_dir = File.directory?(target)
 
 
 def to_new_syntax(line)
-	line.gsub(/:(\w+) =>/, '\1:')
+	line.gsub(/:(\w+\s*)=>/, '\1:')
 end
 
 def convert_file(file_name, full_mode)
@@ -30,7 +30,7 @@ def convert_file(file_name, full_mode)
 	while (line = file.gets)
 		updated_line=to_new_syntax(line)
 
-		if line.lstrip.start_with?("#") or full_mode
+		if line_should_be_editable(line, full_mode, file_name)
 			new_file+=updated_line
 			changes_made = changes_made || (updated_line != line)
 		else
@@ -39,10 +39,21 @@ def convert_file(file_name, full_mode)
 	end
 	file.close
 
-
 	save_file(file_name, new_file) if changes_made # execute new save only if changes made to original
-
 end
+
+def line_should_be_editable(line, full_mode, file_name)
+	if file_name.match(/\.rb$/).nil? or full_mode # Case of no *.rb file, not code. if full_mode - doesn't matter
+		return true
+	end
+
+	if line.lstrip.start_with?("#")
+		return true
+	end
+
+	return false
+end
+
 
 def save_file(orig_file_name, content)
 
