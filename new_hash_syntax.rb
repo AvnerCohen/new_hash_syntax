@@ -3,11 +3,13 @@
 file_name = ARGV[0]
 
 if file_name.nil?
-	puts "Syntax: new_hash_syntax.rb file_name.rb <FULL>\nFULL - Add to also change code lines and not only comments"
+	puts "Usage:\n new_hash_syntax.rb [file_name|folder_name] <FULL>\n\t\tFULL - Add to also change code lines and not only comments"
 	exit 1
 end
 
 full_mode = (ARGV[1] and ARGV[1].upcase === "FULL")
+
+is_dir = File.directory?(file_name)
 
 
 def to_new_syntax(line)
@@ -33,8 +35,26 @@ def convert_file(file_name, full_mode)
 	file.close
 end
 
-convert_file(file_name, full_mode)
+def log_changes(file_name)
+		puts "================="
+		puts "Created " + file_name + "_updated"
+		puts "Compare using:\ndiff #{file_name}_updated #{file_name}"
+		puts "Once happy:\nmv #{file_name}_updated #{file_name}"
+		puts "================="
+end
 
-puts "* Done. Created " + file_name + "_updated"
-puts "Compare using:\ndiff #{file_name}_updated #{file_name}"
-puts "Once happy:\nmv #{file_name}_updated #{file_name}"
+
+def process
+
+	if is_dir
+		Dir.glob(file_name+"/*") {|f|
+			convert_file(file_name, full_mode)
+		}
+	else
+
+		convert_file(file_name, full_mode)
+
+
+
+	end
+end
