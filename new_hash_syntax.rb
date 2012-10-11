@@ -18,7 +18,7 @@ is_dir = File.directory?(target)
 
 
 def to_new_syntax(line)
-	line.gsub(/:(\w+\s*)=>/, '\1:')
+	line.gsub(/:(\w+)(\s*)=>/, '\1:')
 end
 
 def convert_file(file_name, full_mode)
