@@ -53,8 +53,7 @@ def log_changes(file_name)
 
   new_file_name = file_name + @postfix
 
-  puts "Compare using:\n\t\t"+ green("diff #{new_file_name} #{file_name}")
-  puts "To Overwrite:\n\t\t"+ green("mv #{new_file_name} #{file_name}\n")
+  puts green("mv #{new_file_name} #{file_name}\n")
 end
 
 
