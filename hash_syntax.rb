@@ -53,7 +53,7 @@ def log_changes(file_name)
 
   new_file_name = file_name + @postfix
 
-  puts green("mv #{new_file_name} #{file_name}\n")
+  puts green("#{new_file_name} #{file_name}")
 end
 
 
